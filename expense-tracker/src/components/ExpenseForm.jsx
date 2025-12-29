@@ -5,56 +5,41 @@ import SelectInput from "./SelectInput";
 const CATEGORIES = ["Food", "Transport", "Bills", "Shopping", "Other"];
 
 export default function ExpenseForm({ onAddExpense }) {
-    const [title, setTitle] = useState("");
-    const [amount, setAmount] = useState("");
-    const [category, setCategory] = useState("Food");
-    const [error, setError] = useState("");
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
+  const [category, setCategory] = useState("Food");
+  const [error, setError] = useState("");
 
-    function submit(){
-        setError("");
+  function submit() {
+    setError("");
 
-        const cleanTitle = title.trim();
-        const numerAmount = Number(amount);
+    const cleanTitle = title.trim();
+    const numberAmount = Number(amount);
 
-        if(!cleanTitle){
-            return setError("Title is required");
-        }
-        if(!Number.isFinite(numerAmount) || numerAmount<=0){
-            return setError("Amount must be > 0");
-        }
+    if (!cleanTitle) return setError("Title is required.");
+    if (!Number.isFinite(numberAmount) || numberAmount <= 0)
+      return setError("Amount must be > 0.");
 
-        onAddExpense({title: cleanTitle, amount: numerAmount, category})
+    onAddExpense({ title: cleanTitle, amount: numberAmount, category });
 
-        setTitle("");
-        setAmount("");
-        setCategory("Food");
-    }
-    return (
-        <div>
-            <div className="row">
-                <TextInput
-                    label={"Title"}
-                    value={title}
-                    onChange={setTitle}
-                    placeholder={"e.g., Pizza"}
-                ></TextInput>
+    setTitle("");
+    setAmount("");
+    setCategory("Food");
+  }
 
-                <TextInput
-                    label={"Amount"}
-                    value={amount}
-                    onChange={setAmount}
-                    placeholder={"e.g., 15"}
-                ></TextInput>
+  return (
+    <div>
+      <div className="row">
+        <TextInput label="Title" value={title} onChange={setTitle} placeholder="e.g., Pizza" />
+        <TextInput label="Amount" value={amount} onChange={setAmount} placeholder="e.g., 15" type="number" />
+        <SelectInput label="Category" value={category} onChange={setCategory} options={CATEGORIES} />
+      </div>
 
-                <SelectInput
-                    label={"Category"}
-                    value={category}
-                    onChange={setCategory}
-                    options={CATEGORIES}
-                ></SelectInput>
-            </div>
-            {error ? <p className="error">{error}</p>: null}
-            <button className="btn primary" onClick={submit}>Add</button>
-        </div>
-    )
+      {error ? <p className="error">{error}</p> : null}
+
+      <button className="btn primary" onClick={submit}>
+        Add
+      </button>
+    </div>
+  );
 }
