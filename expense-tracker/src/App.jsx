@@ -1,34 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState } from 'react';
 import './App.css'
+import Card from './components/Card'
+import ExpenseList from './components/ExpenseList';
+import ExpenseForm from './components/ExpenseForm';
+
+function createId(){
+  if(typeof crypto !== "undefined" && crypto.randomUUID){
+    return crypto.randomUUID(); // 8-4-4-4-16
+  }
+
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`
+}
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [expenses, setExpenses] = useState([
+    {id:createId(), title:"Jacket", amount: 150, category:"Shopping"},
+    {id:createId(), title:"Internet", amount: 25, category:"Bills"},
+  ]);
+
+  function handleAddExpense(data){
+    const newExpense = {id: createId(), ...data};
+    setExpenses((prev)=> [newExpense, ...prev]);
+  }
 
   return (
-    <>
+  <div className="page">
+    <header className="header">
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1 className='title'>Expense Tracker Application</h1>
+        <p className='subtitle'>Week 1 + Week 2 Practice Project</p>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </header>
+
+    <Card title={"Add Expense"}>
+      <ExpenseForm onAddExpense={handleAddExpense}></ExpenseForm>
+    </Card>
+
+
+    <Card title={"Expenses"}>
+      <ExpenseList expenses={expenses}></ExpenseList>
+    </Card>
+
+
+  </div>
   )
 }
 
